@@ -5,6 +5,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "./context/AuthContext";
+import { CustomThemeProvider } from "./context/ThemeContext";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 
@@ -29,11 +30,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <StoreProvider>
-            <Navigation>{children}</Navigation>
-          </StoreProvider>
-        </AuthProvider>
+        <CustomThemeProvider>
+          <AuthProvider>
+            <StoreProvider>
+              <Navigation>{children}</Navigation>
+            </StoreProvider>
+          </AuthProvider>
+        </CustomThemeProvider>
       </body>
     </html>
   );

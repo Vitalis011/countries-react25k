@@ -1,4 +1,6 @@
-import { Box, CircularProgress } from "@mui/material";
+"use client";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
 import AuthRedirect from "../login/AuthRedirect";
 
@@ -23,7 +25,22 @@ const Protected = () => {
     return <AuthRedirect />;
   }
 
-  return <Typography variant="h1">Protected</Typography>;
+  console.log("User: ", user);
+
+  return (
+    <Box sx={{ maxWidth: 1200, mx: "auto", p: 3 }}>
+      <Typography variant="h1">Protected - User Data</Typography>
+      <Typography variant="body1">{user.email}</Typography>
+      <Typography variant="body1">{user.id}</Typography>
+      <Typography variant="body1">{user.user_metadata.name}</Typography>
+      <Image
+        src={user.user_metadata.avatar_url}
+        alt="User Avatar"
+        width={100}
+        height={100}
+      />
+    </Box>
+  );
 };
 
 export default Protected;
