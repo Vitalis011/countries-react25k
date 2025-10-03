@@ -28,6 +28,11 @@ const Navigation = ({ children }) => {
               Logout
             </Button>
           )}
+          {user && (
+            <Button color="inherit" onClick={() => router.push("/profile")}>
+              Profile
+            </Button>
+          )}
           {!user && (
             <Button color="inherit" onClick={() => router.push("/login")}>
               Login

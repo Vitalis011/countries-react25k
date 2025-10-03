@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Favourites Setup SQL</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .container {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        h1 {
+            color: #60a5fa;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header-info {
+            background: #374151;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3b82f6;
+        }
+        .copy-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background: #2563eb;
+        }
+        .copy-button:active {
+            background: #1d4ed8;
+        }
+        .sql-container {
+            position: relative;
+            background: #111827;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #374151;
+        }
+        .sql-header {
+            background: #1f2937;
+            padding: 15px 20px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sql-title {
+            color: #f3f4f6;
+            font-weight: 600;
+            margin: 0;
+        }
+        .copy-btn-small {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .copy-btn-small:hover {
+            background: #047857;
+        }
+        .sql-code {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 25px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 0;
+        }
+        .comment {
+            color: #9ca3af;
+            font-style: italic;
+        }
+        .keyword {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+        .string {
+            color: #34d399;
+        }
+        .function {
+            color: #fbbf24;
+        }
+        .instructions {
+            background: #065f46;
+            border: 1px solid #059669;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .instructions h3 {
+            color: #6ee7b7;
+            margin-top: 0;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .step-number {
+            background: #059669;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 12px;
+            margin-left: -20px;
+        }
+        .warning {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning h4 {
+            color: #fca5a5;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗃️ Supabase Favourites Setup SQL</h1>
+        
+        <div class="header-info">
+            <h3>📋 Phase 1: Favourites Feature Database Setup</h3>
+            <p>This SQL script creates the database structure for the favourites feature. Run this in your Supabase SQL Editor to set up the favourites table with proper security policies.</p>
+        </div>
+
+        <button class="copy-button" onclick="copyAllSQL()">📋 Copy All SQL Code</button>
+
+        <div class="sql-container">
+            <div class="sql-header">
+                <h4 class="sql-title">supabase-setup.sql</h4>
+                <button class="copy-btn-small" onclick="copyAllSQL()">Copy</button>
+            </div>
+            <pre class="sql-code" id="sqlCode"><span class="comment">-- Supabase SQL Setup for Countries Favourites Feature
+-- Run these commands in your Supabase SQL Editor</span>
+
+<span class="comment">-- 1. Create favourites table</span>
+<span class="keyword">CREATE TABLE IF NOT EXISTS</span> favourites (
+  id <span class="keyword">UUID DEFAULT</span> <span class="function">gen_random_uuid()</span> <span class="keyword">PRIMARY KEY</span>,
+  user_id <span class="keyword">UUID REFERENCES</span> auth.users(id) <span class="keyword">ON DELETE CASCADE NOT NULL</span>,
+  country_name <span class="keyword">TEXT NOT NULL</span>,
+  country_data <span class="keyword">JSONB NOT NULL</span>,
+  created_at <span class="keyword">TIMESTAMP WITH TIME ZONE DEFAULT</span> <span class="function">NOW()</span>,
+  updated_at <span class="keyword">TIMESTAMP WITH TIME ZONE DEFAULT</span> <span class="function">NOW()</span>,
+  
+  <span class="comment">-- Ensure one favourite per user per country</span>
+  <span class="keyword">UNIQUE</span>(user_id, country_name)
+);
+
+<span class="comment">-- 2. Create updated_at trigger function</span>
+<span class="keyword">CREATE OR REPLACE FUNCTION</span> <span class="function">update_updated_at_column()</span>
+<span class="keyword">RETURNS TRIGGER AS</span> $$
+<span class="keyword">BEGIN</span>
+    NEW.updated_at = <span class="function">NOW()</span>;
+    <span class="keyword">RETURN</span> NEW;
+<span class="keyword">END</span>;
+$$ language <span class="string">'plpgsql'</span>;
+
+<span class="comment">-- 3. Create trigger for updated_at</span>
+<span class="keyword">CREATE TRIGGER</span> update_favourites_updated_at 
+    <span class="keyword">BEFORE UPDATE ON</span> favourites 
+    <span class="keyword">FOR EACH ROW</span> 
+    <span class="keyword">EXECUTE FUNCTION</span> <span class="function">update_updated_at_column()</span>;
+
+<span class="comment">-- 4. Enable Row Level Security (RLS)</span>
+<span class="keyword">ALTER TABLE</span> favourites <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="comment">-- 5. Create RLS policies (drop existing ones first to avoid conflicts)</span>
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can view own favourites"</span> <span class="keyword">ON</span> favourites;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can insert own favourites"</span> <span class="keyword">ON</span> favourites;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can update own favourites"</span> <span class="keyword">ON</span> favourites;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can delete own favourites"</span> <span class="keyword">ON</span> favourites;
+
+<span class="comment">-- Policy: Users can only see their own favourites</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can view own favourites"</span> <span class="keyword">ON</span> favourites
+    <span class="keyword">FOR SELECT USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only insert their own favourites</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can insert own favourites"</span> <span class="keyword">ON</span> favourites
+    <span class="keyword">FOR INSERT WITH CHECK</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only update their own favourites</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can update own favourites"</span> <span class="keyword">ON</span> favourites
+    <span class="keyword">FOR UPDATE USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only delete their own favourites</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can delete own favourites"</span> <span class="keyword">ON</span> favourites
+    <span class="keyword">FOR DELETE USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- 6. Create index for better performance</span>
+<span class="keyword">CREATE INDEX IF NOT EXISTS</span> favourites_user_id_idx <span class="keyword">ON</span> favourites(user_id);
+<span class="keyword">CREATE INDEX IF NOT EXISTS</span> favourites_country_name_idx <span class="keyword">ON</span> favourites(country_name);
+
+<span class="comment">-- 7. Grant necessary permissions (if needed)</span>
+<span class="comment">-- GRANT ALL ON favourites TO authenticated;</span>
+<span class="comment">-- GRANT ALL ON favourites TO service_role;</span></pre>
+        </div>
+
+        <div class="instructions">
+            <h3>📝 How to Use This SQL Script</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Copy the SQL code</strong> above using the copy button
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Open your Supabase project</strong> dashboard
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Navigate to SQL Editor</strong> in the left sidebar
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Paste the SQL code</strong> into the editor
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Click "Run"</strong> to execute the script
+            </div>
+        </div>
+
+        <div class="warning">
+            <h4>⚠️ Important Notes</h4>
+            <ul>
+                <li>This script is <strong>idempotent</strong> - you can run it multiple times safely</li>
+                <li>Make sure you have <strong>authentication enabled</strong> in your Supabase project</li>
+                <li>The script creates <strong>Row Level Security policies</strong> to ensure data privacy</li>
+                <li>After running this script, proceed with the <strong>environment variables setup</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function copyAllSQL() {
+            const sqlCode = document.getElementById('sqlCode').textContent;
+            
+            // Clean up the SQL code by removing HTML formatting
+            const cleanSQL = sqlCode
+                .replace(/\n\s*\n/g, '\n\n') // Normalize line breaks
+                .trim();
+            
+            navigator.clipboard.writeText(cleanSQL).then(function() {
+                // Change button text temporarily
+                const buttons = document.querySelectorAll('.copy-button, .copy-btn-small');
+                buttons.forEach(button => {
+                    const originalText = button.textContent;
+                    button.textContent = '✅ Copied!';
+                    button.style.background = '#059669';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                });
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>

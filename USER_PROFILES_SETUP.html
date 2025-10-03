@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profiles Feature Setup Guide (Phase 2)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+            color: #334155;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1e293b;
+            border-bottom: 3px solid #8b5cf6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #7c3aed;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            color: #8b5cf6;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h4 {
+            color: #a855f7;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .critical {
+            background: #fef2f2;
+            color: #dc2626;
+            font-weight: bold;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .inline-code {
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+        }
+        .warning {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .critical-warning {
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .feature-list {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background: #8b5cf6;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .file-structure {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+        }
+        .schema-table {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+        .nav-links {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #c084fc;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #ddd6fe;
+        }
+        .prerequisites {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .api-endpoint {
+            background: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            border-left: 3px solid #8b5cf6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="#prerequisites">Prerequisites</a>
+            <a href="#database-setup">Database Setup</a>
+            <a href="#storage-setup">Storage Setup</a>
+            <a href="#features">Features</a>
+            <a href="#api-endpoints">API Endpoints</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+        </div>
+
+        <h1><span class="emoji">👤</span>User Profiles Feature Setup Guide (Phase 2)</h1>
+
+        <div class="info">
+            <p>This guide will help you set up the user profiles feature for your Countries Next.js application. This is <strong>Phase 2</strong> of the implementation, building on top of the favourites feature from Phase 1.</p>
+        </div>
+
+        <h2 id="prerequisites">Prerequisites</h2>
+        
+        <div class="prerequisites">
+            <strong>Required before starting Phase 2:</strong>
+            <ul>
+                <li>✅ Phase 1 (Favourites feature) must be completed first</li>
+                <li>✅ Supabase project with authentication enabled</li>
+                <li>✅ Environment variables configured from Phase 1</li>
+            </ul>
+        </div>
+
+        <h2 id="database-setup"><span class="step-number">1</span>Database Setup</h2>
+        
+        <p>Run the SQL commands in <code class="inline-code">supabase-profiles-setup.sql</code> in your Supabase SQL Editor:</p>
+        
+        <ol>
+            <li>Go to your Supabase project dashboard</li>
+            <li>Navigate to SQL Editor</li>
+            <li>Copy and paste the contents of <code class="inline-code">supabase-profiles-setup.sql</code></li>
+            <li>Run the query</li>
+        </ol>
+
+        <div class="success">
+            <strong>This will create:</strong>
+            <ul>
+                <li><code class="inline-code">user_profiles</code> table with proper structure</li>
+                <li>Row Level Security (RLS) policies for profiles</li>
+                <li>Automatic profile creation trigger on user signup</li>
+                <li>Necessary indexes for performance</li>
+                <li>Username uniqueness constraints</li>
+            </ul>
+        </div>
+
+        <h2 id="storage-setup"><span class="step-number">2</span>Storage Setup (CRITICAL - Required for Avatar Uploads)</h2>
+        
+        <div class="critical-warning">
+            <h3>⚠️ <strong>IMPORTANT:</strong> You must create the storage bucket or avatar uploads will fail!</h3>
+        </div>
+
+        <h3><strong>Option A: Via Supabase Dashboard (Recommended)</strong></h3>
+        <ol>
+            <li>Go to <strong>Storage</strong> in your Supabase dashboard</li>
+            <li>Click <strong>"Create a new bucket"</strong></li>
+            <li>Set <strong>Name:</strong> <code class="inline-code">avatars</code></li>
+            <li><strong>Enable "Public bucket"</strong> ✅ (critical for avatar access)</li>
+            <li>Optional: Set file size limit to 5MB</li>
+        </ol>
+
+        <h3><strong>Option B: Via SQL (Automated)</strong></h3>
+        <p>The updated <code class="inline-code">supabase-profiles-setup.sql</code> now includes bucket creation. Just run the SQL file and it will create everything automatically.</p>
+
+        <h3><strong>Storage Policies (automatically created by SQL):</strong></h3>
+
+        <div class="code-block">
+-- Allow authenticated users to upload their own avatars
+CREATE POLICY "Users can upload own avatar" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'avatars' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- Allow public access to view avatars
+CREATE POLICY "Avatar images are publicly accessible" ON storage.objects
+  FOR SELECT USING (bucket_id = 'avatars');
+
+-- Allow users to update their own avatars
+CREATE POLICY "Users can update own avatar" ON storage.objects
+  FOR UPDATE USING (
+    bucket_id = 'avatars' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- Allow users to delete their own avatars
+CREATE POLICY "Users can delete own avatar" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'avatars' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );
+        </div>
+
+        <h2 id="features"><span class="step-number">3</span>Features Implemented</h2>
+
+        <div class="feature-list">
+            <h4><span class="emoji">🔒</span>Database & Security <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li>Secure user profiles table with RLS policies</li>
+                <li>Automatic profile creation on user signup</li>
+                <li>Username uniqueness validation</li>
+                <li>Avatar storage with proper permissions</li>
+            </ul>
+
+            <h4><span class="emoji">🔄</span>Redux State Management <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">profileSlice.js</code> for managing profile state</li>
+                <li>Async thunks for profile operations (fetch, update, upload avatar)</li>
+                <li>Proper error handling and loading states</li>
+                <li>Profile caching and state management</li>
+            </ul>
+
+            <h4><span class="emoji">🌐</span>API Routes <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">GET /api/profile</code> - Fetch user profile (auto-creates if missing)</li>
+                <li><code class="inline-code">PUT /api/profile</code> - Update profile information</li>
+                <li><code class="inline-code">POST /api/profile/avatar</code> - Upload avatar image</li>
+                <li>Secure authentication and validation</li>
+            </ul>
+
+            <h4><span class="emoji">🎨</span>UI Components <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">ProfileManager</code> component for profile editing</li>
+                <li>Profile page (<code class="inline-code">/profile</code>) for profile management</li>
+                <li>Avatar upload with preview functionality</li>
+                <li>Form validation and error handling</li>
+                <li>Navigation integration</li>
+            </ul>
+        </div>
+
+        <h2><span class="step-number">4</span>Profile Features</h2>
+
+        <div class="feature-list">
+            <h4><span class="emoji">🎯</span>Profile Information</h4>
+            <ul>
+                <li><strong>Display Name:</strong> Public name shown to other users</li>
+                <li><strong>Username:</strong> Unique identifier (optional)</li>
+                <li><strong>Bio:</strong> Personal description</li>
+                <li><strong>Avatar:</strong> Profile picture upload</li>
+            </ul>
+
+            <h4><span class="emoji">🔒</span>Security Features</h4>
+            <ul>
+                <li>User can only edit their own profile</li>
+                <li>Username uniqueness validation</li>
+                <li>File type and size validation for avatars</li>
+                <li>Secure image upload to Supabase Storage</li>
+            </ul>
+
+            <h4><span class="emoji">🎨</span>User Experience</h4>
+            <ul>
+                <li>Inline editing with save/cancel options</li>
+                <li>Real-time avatar preview</li>
+                <li>Form validation with helpful error messages</li>
+                <li>Loading states and progress indicators</li>
+            </ul>
+        </div>
+
+        <h2><span class="step-number">5</span>How to Use</h2>
+        
+        <ol>
+            <li><strong>Login:</strong> Users must be authenticated to access profile features</li>
+            <li><strong>Auto Profile Creation:</strong> Profile is automatically created on first login</li>
+            <li><strong>Edit Profile:</strong> Click "Edit Profile" button to modify information</li>
+            <li><strong>Upload Avatar:</strong> Click camera icon on avatar to upload new image</li>
+            <li><strong>Save Changes:</strong> Click "Save Changes" to persist updates</li>
+        </ol>
+
+        <h2>File Structure</h2>
+
+        <div class="file-structure">
+src/
+├── app/
+│   ├── api/
+│   │   └── profile/
+│   │       ├── route.js              # Profile CRUD endpoints
+│   │       └── avatar/
+│   │           └── route.js          # Avatar upload endpoint
+│   └── profile/
+│       └── page.jsx                  # Profile management page
+├── components/
+│   └── ProfileManager.jsx            # Profile editing component
+└── lib/
+    └── features/
+        └── profile/
+            └── profileSlice.js       # Redux slice for profiles
+        </div>
+
+        <h2>Environment Variables</h2>
+        
+        <div class="info">
+            <strong>No additional environment variables are required beyond Phase 1.</strong> The existing Supabase configuration handles both favourites and profiles.
+        </div>
+
+        <h2>Avatar Upload Specifications</h2>
+        
+        <ul>
+            <li><strong>Supported Formats:</strong> JPEG, PNG, GIF, WebP</li>
+            <li><strong>Maximum Size:</strong> 5MB per image</li>
+            <li><strong>Storage:</strong> Supabase Storage bucket (<code class="inline-code">avatars</code>)</li>
+            <li><strong>Access:</strong> Public read access for display</li>
+            <li><strong>Security:</strong> Users can only upload/modify their own avatars</li>
+        </ul>
+
+        <h2>Database Schema</h2>
+
+        <div class="schema-table">
+            <h4>user_profiles table:</h4>
+            <div class="code-block">
+- id: UUID (Primary Key)
+- user_id: UUID (Foreign Key to auth.users, Unique)
+- username: TEXT (Unique, Optional)
+- display_name: TEXT
+- avatar_url: TEXT
+- bio: TEXT
+- created_at: TIMESTAMP
+- updated_at: TIMESTAMP
+            </div>
+        </div>
+
+        <h2 id="api-endpoints">API Endpoints</h2>
+
+        <div class="api-endpoint">
+            <strong>GET /api/profile</strong><br>
+            - Fetches current user's profile<br>
+            - Auto-creates profile if it doesn't exist<br>
+            - Returns profile data
+        </div>
+
+        <div class="api-endpoint">
+            <strong>PUT /api/profile</strong><br>
+            - Updates profile information<br>
+            - Validates username format and uniqueness<br>
+            - Returns updated profile
+        </div>
+
+        <div class="api-endpoint">
+            <strong>POST /api/profile/avatar</strong><br>
+            - Uploads avatar image<br>
+            - Validates file type and size<br>
+            - Updates profile with new avatar URL<br>
+            - Returns new avatar URL
+        </div>
+
+        <h2>Integration with Existing Features</h2>
+        
+        <p>The profile system integrates seamlessly with:</p>
+        <ul>
+            <li><strong>Authentication:</strong> Uses existing auth system</li>
+            <li><strong>Favourites:</strong> Profile info can be displayed alongside favourites</li>
+            <li><strong>Navigation:</strong> Profile link appears for authenticated users</li>
+            <li><strong>Redux Store:</strong> Shares the same store with other features</li>
+        </ul>
+
+        <h2 id="troubleshooting">Troubleshooting</h2>
+
+        <h3>Common Issues</h3>
+
+        <div class="warning">
+            <h4>"Failed to create profile"</h4>
+            <ul>
+                <li>Ensure the user_profiles table exists</li>
+                <li>Check RLS policies are properly configured</li>
+                <li>Verify the auto-creation trigger is active</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>"Username is already taken"</h4>
+            <ul>
+                <li>Username must be unique across all users</li>
+                <li>Try a different username</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>Avatar upload fails</h4>
+            <ul>
+                <li>Ensure the <code class="inline-code">avatars</code> storage bucket exists</li>
+                <li>Check file size (max 5MB) and type (image formats only)</li>
+                <li>Verify storage RLS policies are configured</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>Profile not loading</h4>
+            <ul>
+                <li>Check authentication status</li>
+                <li>Verify API routes are accessible</li>
+                <li>Check browser console for errors</li>
+            </ul>
+        </div>
+
+        <h3>Testing the Feature</h3>
+        
+        <ol>
+            <li><strong>Login</strong> to the application</li>
+            <li><strong>Navigate</strong> to the Profile page via the navigation menu</li>
+            <li><strong>Edit Profile</strong> by clicking the "Edit Profile" button</li>
+            <li><strong>Upload Avatar</strong> by clicking the camera icon</li>
+            <li><strong>Update Information</strong> (display name, username, bio)</li>
+            <li><strong>Save Changes</strong> and verify updates persist</li>
+        </ol>
+
+        <h2>Future Enhancements</h2>
+        
+        <p>Potential future improvements:</p>
+        <ul>
+            <li>Profile visibility settings (public/private)</li>
+            <li>Profile viewing for other users</li>
+            <li>Social features (follow/unfollow)</li>
+            <li>Profile statistics and activity</li>
+            <li>Advanced avatar editing (crop, resize)</li>
+            <li>Profile themes and customization</li>
+        </ul>
+
+        <h2>Summary</h2>
+        
+        <div class="success">
+            <h3><span class="emoji">🎉</span>Phase 2 adds comprehensive user profile management to your application, allowing users to:</h3>
+            <ul>
+                <li>✅ Manage their profile information</li>
+                <li>✅ Upload and change avatar images</li>
+                <li>✅ Set unique usernames and display names</li>
+                <li>✅ Add personal bio information</li>
+                <li>✅ Maintain secure, private profile data</li>
+            </ul>
+            <p><strong>The implementation follows security best practices and integrates seamlessly with the existing favourites feature from Phase 1.</strong></p>
+        </div>
+    </div>
+</body>
+</html>

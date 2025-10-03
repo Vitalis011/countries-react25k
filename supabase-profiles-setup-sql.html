@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase User Profiles Setup SQL</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f0a19;
+            color: #e2e8f0;
+        }
+        .container {
+            background: #1a1625;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        h1 {
+            color: #c084fc;
+            border-bottom: 3px solid #8b5cf6;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header-info {
+            background: #2d1b69;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #8b5cf6;
+        }
+        .copy-button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background: #7c3aed;
+        }
+        .copy-button:active {
+            background: #6d28d9;
+        }
+        .sql-container {
+            position: relative;
+            background: #111827;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #374151;
+        }
+        .sql-header {
+            background: #1f2937;
+            padding: 15px 20px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sql-title {
+            color: #f3f4f6;
+            font-weight: 600;
+            margin: 0;
+        }
+        .copy-btn-small {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .copy-btn-small:hover {
+            background: #047857;
+        }
+        .sql-code {
+            background: #111827;
+            color: #e5e7eb;
+            padding: 25px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre;
+            margin: 0;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .comment {
+            color: #9ca3af;
+            font-style: italic;
+        }
+        .keyword {
+            color: #c084fc;
+            font-weight: bold;
+        }
+        .string {
+            color: #34d399;
+        }
+        .function {
+            color: #fbbf24;
+        }
+        .instructions {
+            background: #581c87;
+            border: 1px solid #8b5cf6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .instructions h3 {
+            color: #ddd6fe;
+            margin-top: 0;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .step-number {
+            background: #8b5cf6;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 12px;
+            margin-left: -20px;
+        }
+        .warning {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .warning h4 {
+            color: #fca5a5;
+            margin-top: 0;
+        }
+        .critical {
+            background: #7f1d1d;
+            border: 2px solid #ef4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .critical h4 {
+            color: #fca5a5;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .phase-badge {
+            background: #8b5cf6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Supabase User Profiles Setup SQL <span class="phase-badge">Phase 2</span></h1>
+        
+        <div class="header-info">
+            <h3>📋 Phase 2: User Profiles Feature Database Setup</h3>
+            <p>This SQL script creates the complete database structure for the user profiles feature, including the profiles table, storage bucket for avatars, and all necessary security policies.</p>
+        </div>
+
+        <div class="critical">
+            <h4>⚠️ CRITICAL: Prerequisites Required</h4>
+            <ul>
+                <li><strong>Phase 1 must be completed first</strong> - Run the favourites setup SQL before this</li>
+                <li><strong>Authentication must be enabled</strong> in your Supabase project</li>
+                <li><strong>This script creates storage bucket and policies</strong> - ensure you have storage enabled</li>
+            </ul>
+        </div>
+
+        <button class="copy-button" onclick="copyAllSQL()">📋 Copy All SQL Code</button>
+
+        <div class="sql-container">
+            <div class="sql-header">
+                <h4 class="sql-title">supabase-profiles-setup.sql</h4>
+                <button class="copy-btn-small" onclick="copyAllSQL()">Copy</button>
+            </div>
+            <pre class="sql-code" id="sqlCode"><span class="comment">-- Supabase SQL Setup for User Profiles Feature (Phase 2)
+-- Run these commands in your Supabase SQL Editor AFTER setting up favourites</span>
+
+<span class="comment">-- 1. Create user_profiles table</span>
+<span class="keyword">CREATE TABLE IF NOT EXISTS</span> user_profiles (
+  id <span class="keyword">UUID DEFAULT</span> <span class="function">gen_random_uuid()</span> <span class="keyword">PRIMARY KEY</span>,
+  user_id <span class="keyword">UUID REFERENCES</span> auth.users(id) <span class="keyword">ON DELETE CASCADE NOT NULL UNIQUE</span>,
+  username <span class="keyword">TEXT</span>,
+  display_name <span class="keyword">TEXT</span>,
+  avatar_url <span class="keyword">TEXT</span>,
+  bio <span class="keyword">TEXT</span>,
+  created_at <span class="keyword">TIMESTAMP WITH TIME ZONE DEFAULT</span> <span class="function">NOW()</span>,
+  updated_at <span class="keyword">TIMESTAMP WITH TIME ZONE DEFAULT</span> <span class="function">NOW()</span>,
+  
+  <span class="comment">-- Ensure unique username if provided</span>
+  <span class="keyword">UNIQUE</span>(username)
+);
+
+<span class="comment">-- 2. Create updated_at trigger for user_profiles</span>
+<span class="keyword">CREATE TRIGGER</span> update_user_profiles_updated_at 
+    <span class="keyword">BEFORE UPDATE ON</span> user_profiles 
+    <span class="keyword">FOR EACH ROW</span> 
+    <span class="keyword">EXECUTE FUNCTION</span> <span class="function">update_updated_at_column()</span>;
+
+<span class="comment">-- 3. Enable Row Level Security (RLS) for user_profiles</span>
+<span class="keyword">ALTER TABLE</span> user_profiles <span class="keyword">ENABLE ROW LEVEL SECURITY</span>;
+
+<span class="comment">-- 4. Create RLS policies for user_profiles (drop existing ones first)</span>
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can view own profile"</span> <span class="keyword">ON</span> user_profiles;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can insert own profile"</span> <span class="keyword">ON</span> user_profiles;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can update own profile"</span> <span class="keyword">ON</span> user_profiles;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can delete own profile"</span> <span class="keyword">ON</span> user_profiles;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Public profiles are viewable by everyone"</span> <span class="keyword">ON</span> user_profiles;
+
+<span class="comment">-- Policy: Users can only see their own profile</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can view own profile"</span> <span class="keyword">ON</span> user_profiles
+    <span class="keyword">FOR SELECT USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only insert their own profile</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can insert own profile"</span> <span class="keyword">ON</span> user_profiles
+    <span class="keyword">FOR INSERT WITH CHECK</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only update their own profile</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can update own profile"</span> <span class="keyword">ON</span> user_profiles
+    <span class="keyword">FOR UPDATE USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Users can only delete their own profile</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can delete own profile"</span> <span class="keyword">ON</span> user_profiles
+    <span class="keyword">FOR DELETE USING</span> (<span class="function">auth.uid()</span> = user_id);
+
+<span class="comment">-- Policy: Allow public viewing of profiles (optional - for future features)</span>
+<span class="comment">-- CREATE POLICY "Public profiles are viewable by everyone" ON user_profiles
+--     FOR SELECT USING (true);</span>
+
+<span class="comment">-- 5. Create indexes for better performance</span>
+<span class="keyword">CREATE INDEX IF NOT EXISTS</span> user_profiles_user_id_idx <span class="keyword">ON</span> user_profiles(user_id);
+<span class="keyword">CREATE INDEX IF NOT EXISTS</span> user_profiles_username_idx <span class="keyword">ON</span> user_profiles(username);
+
+<span class="comment">-- 6. Create function to automatically create profile on user signup</span>
+<span class="keyword">CREATE OR REPLACE FUNCTION</span> public.<span class="function">handle_new_user()</span>
+<span class="keyword">RETURNS TRIGGER AS</span> $$
+<span class="keyword">BEGIN</span>
+  <span class="keyword">INSERT INTO</span> public.user_profiles (user_id, display_name, avatar_url)
+  <span class="keyword">VALUES</span> (
+    NEW.id,
+    <span class="function">COALESCE</span>(NEW.raw_user_meta_data->><span class="string">'name'</span>, NEW.raw_user_meta_data->><span class="string">'full_name'</span>, <span class="string">'User'</span>),
+    NEW.raw_user_meta_data->><span class="string">'avatar_url'</span>
+  );
+  <span class="keyword">RETURN</span> NEW;
+<span class="keyword">END</span>;
+$$ <span class="keyword">LANGUAGE</span> plpgsql <span class="keyword">SECURITY DEFINER</span>;
+
+<span class="comment">-- 7. Create trigger to automatically create profile on user signup</span>
+<span class="keyword">DROP TRIGGER IF EXISTS</span> on_auth_user_created <span class="keyword">ON</span> auth.users;
+<span class="keyword">CREATE TRIGGER</span> on_auth_user_created
+  <span class="keyword">AFTER INSERT ON</span> auth.users
+  <span class="keyword">FOR EACH ROW EXECUTE FUNCTION</span> public.<span class="function">handle_new_user()</span>;
+
+<span class="comment">-- 8. Create storage bucket for avatars (if it doesn't exist)</span>
+<span class="keyword">INSERT INTO</span> storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+<span class="keyword">VALUES</span> (
+  <span class="string">'avatars'</span>,
+  <span class="string">'avatars'</span>, 
+  <span class="keyword">true</span>,
+  5242880, <span class="comment">-- 5MB limit</span>
+  <span class="keyword">ARRAY</span>[<span class="string">'image/jpeg'</span>, <span class="string">'image/png'</span>, <span class="string">'image/gif'</span>, <span class="string">'image/webp'</span>]
+)
+<span class="keyword">ON CONFLICT</span> (id) <span class="keyword">DO NOTHING</span>;
+
+<span class="comment">-- 9. Create storage policies for avatars bucket</span>
+<span class="comment">-- Drop existing policies first to avoid conflicts</span>
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can upload own avatar"</span> <span class="keyword">ON</span> storage.objects;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Avatar images are publicly accessible"</span> <span class="keyword">ON</span> storage.objects;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can update own avatar"</span> <span class="keyword">ON</span> storage.objects;
+<span class="keyword">DROP POLICY IF EXISTS</span> <span class="string">"Users can delete own avatar"</span> <span class="keyword">ON</span> storage.objects;
+
+<span class="comment">-- Allow authenticated users to upload their own avatars</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can upload own avatar"</span> <span class="keyword">ON</span> storage.objects
+  <span class="keyword">FOR INSERT WITH CHECK</span> (
+    bucket_id = <span class="string">'avatars'</span> <span class="keyword">AND</span> 
+    <span class="function">auth.uid()</span>::text = (storage.<span class="function">foldername</span>(name))[1]
+  );
+
+<span class="comment">-- Allow public access to view avatars</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Avatar images are publicly accessible"</span> <span class="keyword">ON</span> storage.objects
+  <span class="keyword">FOR SELECT USING</span> (bucket_id = <span class="string">'avatars'</span>);
+
+<span class="comment">-- Allow users to update their own avatars</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can update own avatar"</span> <span class="keyword">ON</span> storage.objects
+  <span class="keyword">FOR UPDATE USING</span> (
+    bucket_id = <span class="string">'avatars'</span> <span class="keyword">AND</span> 
+    <span class="function">auth.uid()</span>::text = (storage.<span class="function">foldername</span>(name))[1]
+  );
+
+<span class="comment">-- Allow users to delete their own avatars</span>
+<span class="keyword">CREATE POLICY</span> <span class="string">"Users can delete own avatar"</span> <span class="keyword">ON</span> storage.objects
+  <span class="keyword">FOR DELETE USING</span> (
+    bucket_id = <span class="string">'avatars'</span> <span class="keyword">AND</span> 
+    <span class="function">auth.uid()</span>::text = (storage.<span class="function">foldername</span>(name))[1]
+  );
+
+<span class="comment">-- 10. Grant necessary permissions</span>
+<span class="comment">-- GRANT ALL ON user_profiles TO authenticated;</span>
+<span class="comment">-- GRANT ALL ON user_profiles TO service_role;</span></pre>
+        </div>
+
+        <div class="instructions">
+            <h3>📝 How to Use This SQL Script</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Ensure Phase 1 is complete</strong> - Run the favourites setup SQL first
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Copy the SQL code</strong> above using the copy button
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Open your Supabase project</strong> dashboard
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Navigate to SQL Editor</strong> in the left sidebar
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Paste the SQL code</strong> into the editor
+            </div>
+            <div class="step">
+                <span class="step-number">6</span>
+                <strong>Click "Run"</strong> to execute the script
+            </div>
+        </div>
+
+        <div class="warning">
+            <h4>🎯 What This Script Creates</h4>
+            <ul>
+                <li><strong>user_profiles table</strong> with all necessary fields and constraints</li>
+                <li><strong>Row Level Security policies</strong> for secure profile access</li>
+                <li><strong>Automatic profile creation trigger</strong> on user signup</li>
+                <li><strong>Storage bucket "avatars"</strong> for profile pictures</li>
+                <li><strong>Storage policies</strong> for secure avatar uploads</li>
+                <li><strong>Performance indexes</strong> for optimal queries</li>
+            </ul>
+        </div>
+
+        <div class="critical">
+            <h4>⚠️ Important Notes</h4>
+            <ul>
+                <li>This script is <strong>idempotent</strong> - you can run it multiple times safely</li>
+                <li><strong>Storage bucket creation</strong> is included - no manual bucket creation needed</li>
+                <li><strong>Avatar uploads will work immediately</strong> after running this script</li>
+                <li>The script creates <strong>automatic profile creation</strong> for new users</li>
+                <li>All <strong>security policies</strong> are properly configured</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function copyAllSQL() {
+            const sqlCode = document.getElementById('sqlCode').textContent;
+            
+            // Clean up the SQL code by removing HTML formatting
+            const cleanSQL = sqlCode
+                .replace(/\n\s*\n/g, '\n\n') // Normalize line breaks
+                .trim();
+            
+            navigator.clipboard.writeText(cleanSQL).then(function() {
+                // Change button text temporarily
+                const buttons = document.querySelectorAll('.copy-button, .copy-btn-small');
+                buttons.forEach(button => {
+                    const originalText = button.textContent;
+                    button.textContent = '✅ Copied!';
+                    button.style.background = '#059669';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                });
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>

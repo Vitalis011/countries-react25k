@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favourites Feature Setup Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+            color: #334155;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1e293b;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #1e40af;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            color: #1d4ed8;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h4 {
+            color: #2563eb;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .planned {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .inline-code {
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+        }
+        .warning {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .feature-list {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background: #3b82f6;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .file-structure {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+        .nav-links {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #60a5fa;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #93c5fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="#database-setup">Database Setup</a>
+            <a href="#environment-variables">Environment Variables</a>
+            <a href="#features">Features</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+            <a href="#file-structure">File Structure</a>
+        </div>
+
+        <h1><span class="emoji">⭐</span>Favourites Feature Setup Guide</h1>
+
+        <div class="info">
+            <strong>Phase 1: Favourites Feature Implementation</strong> <span class="status-badge completed">✅ Complete</span>
+            <p>This guide will help you set up the favourites feature for your Countries Next.js application.</p>
+        </div>
+
+        <h2 id="database-setup"><span class="step-number">1</span>Database Setup</h2>
+        
+        <p>Run the SQL commands in <code class="inline-code">supabase-setup.sql</code> in your Supabase SQL Editor:</p>
+        
+        <ol>
+            <li>Go to your Supabase project dashboard</li>
+            <li>Navigate to SQL Editor</li>
+            <li>Copy and paste the contents of <code class="inline-code">supabase-setup.sql</code></li>
+            <li>Run the query</li>
+        </ol>
+
+        <div class="success">
+            <strong>This will create:</strong>
+            <ul>
+                <li><code class="inline-code">favourites</code> table with proper structure</li>
+                <li>Row Level Security (RLS) policies</li>
+                <li>Necessary indexes for performance</li>
+                <li>Triggers for automatic timestamp updates</li>
+            </ul>
+        </div>
+
+        <h2 id="environment-variables"><span class="step-number">2</span>Environment Variables</h2>
+        
+        <p>Add the following to your <code class="inline-code">.env.local</code> file:</p>
+
+        <div class="code-block">
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# OpenWeather API (if using weather feature)
+NEXT_PUBLIC_OPENWEATHERAPI=your_openweather_api_key
+        </div>
+
+        <div class="warning">
+            <strong>Important:</strong> The <code class="inline-code">SUPABASE_SERVICE_ROLE_KEY</code> is required for the API routes to work properly. You can find this in your Supabase project settings under "API" section.
+        </div>
+
+        <h2 id="features"><span class="step-number">3</span>Features Implemented</h2>
+
+        <div class="feature-list">
+            <h4><span class="emoji">🔒</span>Database & Security <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li>Secure favourites table with RLS policies</li>
+                <li>User-specific data isolation</li>
+                <li>Unique constraints to prevent duplicate favourites</li>
+            </ul>
+
+            <h4><span class="emoji">🔄</span>Redux State Management <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">favouritesSlice.js</code> for managing favourites state</li>
+                <li>Async thunks for API operations (fetch, add, remove)</li>
+                <li>Proper error handling and loading states</li>
+            </ul>
+
+            <h4><span class="emoji">🌐</span>API Routes <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">GET /api/favourites</code> - Fetch user's favourites</li>
+                <li><code class="inline-code">POST /api/favourites</code> - Add a new favourite</li>
+                <li><code class="inline-code">DELETE /api/favourites</code> - Remove a favourite</li>
+                <li>Secure authentication using JWT tokens</li>
+            </ul>
+
+            <h4><span class="emoji">🎨</span>UI Components <span class="status-badge completed">✅</span></h4>
+            <ul>
+                <li><code class="inline-code">FavouriteButton</code> component for toggling favourites</li>
+                <li>Favourites page (<code class="inline-code">/favourites</code>) to view saved countries</li>
+                <li>Integration with existing country pages</li>
+                <li>Navigation link (only visible when logged in)</li>
+            </ul>
+        </div>
+
+        <h2><span class="step-number">4</span>How to Use</h2>
+        
+        <ol>
+            <li><strong>Login:</strong> Users must be authenticated to use favourites</li>
+            <li><strong>Add Favourites:</strong> Click the heart icon on any country page</li>
+            <li><strong>View Favourites:</strong> Navigate to "Favourites" in the navigation menu</li>
+            <li><strong>Remove Favourites:</strong> Click the filled heart icon to remove from favourites</li>
+        </ol>
+
+        <h2><span class="step-number">5</span>Security Features</h2>
+        
+        <ul>
+            <li><strong>Row Level Security:</strong> Users can only access their own favourites</li>
+            <li><strong>JWT Authentication:</strong> All API calls require valid authentication tokens</li>
+            <li><strong>Server-side Validation:</strong> Proper user verification in API routes</li>
+            <li><strong>Unique Constraints:</strong> Prevents duplicate favourites per user</li>
+        </ul>
+
+        <h2>Phase 2: User Profile Feature</h2>
+        
+        <div class="info">
+            <strong>The following features are planned for Phase 2:</strong> <span class="status-badge planned">🔄 Planned</span>
+        </div>
+
+        <div class="feature-list">
+            <h4><span class="emoji">👤</span>User Profiles Table</h4>
+            <ul>
+                <li>Create <code class="inline-code">user_profiles</code> table with RLS policies</li>
+                <li>Link to auth.users table</li>
+                <li>Fields for username/alias and profile picture</li>
+            </ul>
+
+            <h4><span class="emoji">⚙️</span>Profile Management</h4>
+            <ul>
+                <li>Redux slice for profile state management</li>
+                <li>API routes for profile updates</li>
+                <li>Profile management UI component</li>
+                <li>Avatar upload functionality</li>
+            </ul>
+
+            <h4><span class="emoji">✨</span>Profile Features</h4>
+            <ul>
+                <li>Update username/alias</li>
+                <li>Upload/change profile picture</li>
+                <li>Maintain auth table integrity</li>
+                <li>Profile display in navigation</li>
+            </ul>
+        </div>
+
+        <h2 id="troubleshooting">Troubleshooting</h2>
+
+        <h3>Common Issues</h3>
+
+        <div class="warning">
+            <h4>"No authentication token found"</h4>
+            <ul>
+                <li>Ensure user is logged in</li>
+                <li>Check that Supabase auth is working properly</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>"Failed to fetch favourites"</h4>
+            <ul>
+                <li>Verify <code class="inline-code">SUPABASE_SERVICE_ROLE_KEY</code> is set correctly</li>
+                <li>Check Supabase RLS policies are applied</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h4>Database connection errors</h4>
+            <ul>
+                <li>Verify Supabase URL and keys are correct</li>
+                <li>Ensure the favourites table exists</li>
+            </ul>
+        </div>
+
+        <h3>Testing the Feature</h3>
+        
+        <ol>
+            <li>Login to the application</li>
+            <li>Navigate to any country page</li>
+            <li>Click the heart icon to add to favourites</li>
+            <li>Visit the Favourites page to see saved countries</li>
+            <li>Click the filled heart to remove from favourites</li>
+        </ol>
+
+        <h2 id="file-structure">File Structure</h2>
+
+        <div class="file-structure">
+src/
+├── app/
+│   ├── api/
+│   │   └── favourites/
+│   │       └── route.js          # Favourites API endpoints
+│   └── favourites/
+│       └── page.jsx              # Favourites page component
+├── components/
+│   └── FavouriteButton.jsx       # Favourite toggle button
+└── lib/
+    ├── features/
+    │   └── favourites/
+    │       └── favouritesSlice.js # Redux slice for favourites
+    └── supabase/
+        └── supabase-server.js    # Server-side Supabase client
+        </div>
+
+        <h2>Next Steps</h2>
+        
+        <p>After setting up the favourites feature, you can proceed with Phase 2 to implement user profiles, or extend the current favourites feature with additional functionality like:</p>
+        
+        <ul>
+            <li>Favourite categories/tags</li>
+            <li>Export favourites list</li>
+            <li>Share favourite countries</li>
+            <li>Favourite statistics and analytics</li>
+        </ul>
+
+        <div class="success">
+            <strong>🎉 Congratulations!</strong> Your favourites feature is now ready to use. Users can save and manage their favourite countries with full security and a great user experience.
+        </div>
+    </div>
+</body>
+</html>
