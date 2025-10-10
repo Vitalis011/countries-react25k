@@ -1,4 +1,6 @@
 "use client";
+import { useAuth } from "@/app/context/AuthContext";
+import FavouriteButton from "@/components/FavouriteButton";
 import {
   clearSelectedCountry,
   fetchCountries,
@@ -26,6 +28,7 @@ const CountryPage = () => {
   const { slug } = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { user } = useAuth();
 
   // 2. Get country data from Redux store
   const { selectedCountry, loading, error, countries } = useSelector(
@@ -200,6 +203,12 @@ const CountryPage = () => {
       >
         Back to Countries
       </Button>
+
+      {user && (
+        <Box>
+          <FavouriteButton country={selectedCountry} />
+        </Box>
+      )}
 
       {/* Main Content */}
       <Paper elevation={3} sx={{ p: 4 }}>
