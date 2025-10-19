@@ -48,7 +48,7 @@ export const addFavourite = createAsyncThunk(
         .from("favourites")
         .insert({
           user_id: session.user.id,
-          country_name: countryData.name, // field name in the database country_name
+          country_name: countryData.name.common, // store only the common name string
           country_data: countryData, // field name in the database country_data
         })
         .select()
@@ -73,7 +73,8 @@ export const removeFavourite = createAsyncThunk(
       const { data, error } = await supabase
         .from("favourites")
         .delete()
-        .eq("country_name", countryName);
+        .eq("country_data->name->common", countryName);
+
       if (error) throw error;
       return countryName;
     } catch (error) {
