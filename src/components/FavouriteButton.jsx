@@ -15,8 +15,7 @@ const FavouriteButton = ({ country, variant = "button" }) => {
   const { user } = useAuth();
   const isFavourite = useSelector((state) =>
     state.favourites.favourites.some(
-      (favourite) =>
-        favourite.country_data?.name?.common === country?.name?.common
+      (favourite) => favourite.country_name === country?.name?.common
     )
   );
   const loading = useSelector((state) => state.favourites.loading);
