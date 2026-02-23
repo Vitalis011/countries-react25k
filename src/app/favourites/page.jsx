@@ -45,7 +45,7 @@ const FavouritesPage = () => {
       ) : (
         <Grid container spacing={2}>
           {favourites.map((favourite) => {
-            const country = favourite.country_name;
+            const country = favourite.country_data;
             return (
               <Grid item xs={12} sm={6} md={4} lg={3} key={favourite.id}>
                 <Card>

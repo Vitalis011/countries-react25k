@@ -23,6 +23,9 @@ const Navigation = ({ children }) => {
           <Button color="inherit" onClick={() => router.push("/protected")}>
             Protected
           </Button>
+          <Button color="inherit" onClick={() => router.push("/favourites")}>
+            Favourites
+          </Button>
           {user && (
             <Button color="inherit" onClick={() => signOut()}>
               Logout
